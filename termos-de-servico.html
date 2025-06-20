@@ -1,0 +1,99 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termos de Serviço - Postagem Story</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; max-width: 800px; }
+        h1, h2 { color: #333; }
+        p, li { font-size: 16px; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Termos de Serviço</h1>
+    <p><strong>Última atualização: 20 de junho de 2025</strong></p>
+    <p>Estes Termos de Serviço ("Termos") regem o uso do aplicativo <strong>Postagem Story</strong> ("nós", "nosso" ou "aplicativo"), operado pela equipe do Postagem Story. Ao acessar ou usar o aplicativo, você concorda em cumprir estes Termos. Se você não concordar com qualquer parte destes Termos, não utilize o aplicativo.</p>
+
+    <h2>1. Uso do Aplicativo</h2>
+    <p>O <strong>Postagem Story</strong> é um aplicativo que permite aos usuários criar e compartilhar conteúdo de forma prática. Para usar o aplicativo, você deve:</p>
+    <ul>
+        <li>Ser maior de 13 anos ou ter consentimento parental, conforme exigido pela legislação aplicável.</li>
+        <li>Fazer login por meio de autenticação via Facebook, utilizando permissões como <code>public_profile</code> e <code>email</code>.</li>
+        <li>Concordar em usar o aplicativo de maneira legal, ética e em conformidade com estes Termos.</li>
+    </ul>
+
+    <h2>2. Conduta do Usuário</h2>
+    <p>O usuário se compromete a fazer uso adequado do <strong>Postagem Story</strong> e de seus conteúdos, com caráter enunciativo, mas não limitativo:</p>
+    <ul>
+        <li><strong>A)</strong> Não se envolver em atividades ilegais ou contrárias à boa fé e à ordem pública;</li>
+        <li><strong>B)</strong> Não difundir propaganda ou conteúdo de natureza racista, xenofóbica, jogos de sorte ou azar, qualquer tipo de pornografia ilegal, de apologia ao terrorismo ou contra os direitos humanos;</li>
+        <li><strong>C)</strong> Não causar danos aos sistemas físicos (hardwares) e lógicos (softwares) do <strong>Postagem Story</strong>, de seus fornecedores ou terceiros, nem introduzir ou disseminar vírus informáticos ou quaisquer outros sistemas de hardware ou software que sejam capazes de causar danos.</li>
+    </ul>
+
+    <h2>3. Propriedade Intelectual</h2>
+    <p>Todo o conteúdo do <strong>Postagem Story</strong>, incluindo textos, gráficos, logotipos, ícones, imagens e software, é de propriedade do <strong>Postagem Story</strong> ou de seus licenciadores e está protegido por leis de direitos autorais, marcas registradas e outras leis de propriedade intelectual. Você não pode copiar, modificar, distribuir ou usar qualquer conteúdo sem autorização expressa.</p>
+
+    <h2>4. Publicidade e Cookies</h2>
+    <p>O <strong>Postagem Story</strong> utiliza serviços de publicidade, como o Google AdSense, para compensar os custos de operação e financiar desenvolvimentos futuros. Esses serviços podem usar cookies, como o cookie DoubleClick, para veicular anúncios relevantes com base em seus interesses, conforme descrito na nossa <a href="politica-de-privacidade.html">Política de Privacidade</a>. Cookies de rastreamento de afiliados também podem ser usados para creditar parceiros adequadamente.</p>
+
+    <h2>5. Limitação de Responsabilidade</h2>
+    <p>O <strong>Postagem Story</strong> é fornecido "como está", sem garantias expressas ou implícitas. Não nos responsabilizamos por danos diretos, indiretos, incidentais ou consequentes decorrentes do uso do aplicativo, exceto quando exigido por lei. Não temos controle sobre o conteúdo de sites externos vinculados ao aplicativo e não nos responsabilizamos por suas práticas.</p>
+
+    <h2>6. Rescisão</h2>
+    <p>Podemos suspender ou encerrar seu acesso ao <strong>Postagem Story</strong> se você violar estes Termos ou usar o aplicativo de maneira inadequada. Você pode encerrar sua conta a qualquer momento, seguindo as instruções de exclusão de dados descritas na nossa <a href="politica-de-privacidade.html">Política de Privacidade</a>.</p>
+
+    <h2>7. Alterações aos Termos</h2>
+    <p>Podemos atualizar estes Termos periodicamente para refletir mudanças no aplicativo ou na legislação aplicável. Notificaremos os usuários sobre alterações significativas por e-mail ou no aplicativo. O uso continuado do <strong>Postagem Story</strong> após as alterações constitui aceitação dos novos Termos.</p>
+
+    <h2>8. Lei Aplicável</h2>
+    <p>Estes Termos são regidos pelas leis do Brasil. Qualquer disputa será resolvida nos tribunais competentes da comarca de São Paulo, SP, salvo disposição legal em contrário.</p>
+
+    <h2>9. Contato</h2>
+    <p>Para dúvidas ou solicitações relacionadas a estes Termos, entre em contato conosco:</p>
+    <p>E-mail: simplesecerta@gmail.com</p>
+
+    <p>Esta política é efetiva a partir de <strong>20 de junho de 2025</strong>.</p>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'952be6fdad2f1aee',t:'MTc1MDQyOTE3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
